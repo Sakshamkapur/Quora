@@ -1,0 +1,45 @@
+<header>
+   
+   <h1 style="color: red;">Quora</h1> 
+	<nav id="head">
+		<ul>
+			<li>Read</li>
+			<li>Answer</li>
+			<li>Notification</li>
+            <li>Hello  <%= current_user.email %></li>
+		</ul>
+	</nav>
+
+</header>
+<div class="input">
+<%= form_tag(controller: "home", action: "question", method: "post") do %>
+
+	<%= label_tag("Question") %><br>
+	<%= text_area_tag(:content) %><br>
+	<%= submit_tag("Submit") %>
+
+<% end %>
+</div>
+Questions
+<div style="border: thick solid green;">
+	<% Question.all.each do |q| %>
+		<div style="border: medium solid black;">
+			email: <%= User.find(q.user_id).email %><br>
+			<%= q.content %>
+			<div style="border: thin solid black;">
+				Answers<br><br>
+				<% Answer.where(question_id: q.id).each do |a| %>
+					email: <%= User.find(a.user_id).email %><br>
+					<%= a.content %><br><br>
+				<% end %>
+				<%= form_tag(controller: "home", action: "answer", method: "post") do %>
+
+					<%= label_tag("Answer: ") %>
+					<%= text_area_tag(:content) %><br>
+					<%= hidden_field_tag("question_id", q.id) %>
+					<%= submit_tag("Submit") %>
+				<% end %>
+			</div>
+		</div>		
+	<% end %> 
+</div>
